@@ -1,0 +1,14 @@
+.b{
+  padding: 12px 24px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: #5ce1ff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.b:hover{
+  background-color: #fb1a7fbf;
+}

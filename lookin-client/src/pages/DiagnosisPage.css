@@ -1,0 +1,30 @@
+.diagnosis-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #fff;
+  text-align: center;
+}
+
+.upload-button {
+  padding: 15px 30px;
+  font-size: 18px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: 0.3s ease;
+}
+
+.upload-button:hover {
+  background-color: #1e7e34;
+}
+.result {
+  margin-top: 30px;
+  font-size: 20px;
+  color: #333;
+}
