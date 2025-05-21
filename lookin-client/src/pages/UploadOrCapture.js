@@ -1,67 +1,80 @@
-// CaptureOrUpload.js
 import React, { useState, useRef } from "react";
 import Webcam from "react-webcam";
 import { useNavigate } from "react-router-dom";
-console.log("CaptureOrUpload loaded");
+
 function CaptureOrUpload() {
   const [mode, setMode] = useState(null);
   const webcamRef = useRef(null);
   const navigate = useNavigate();
+
   const handleCapture = async () => {
-    const imageSrc = webcamRef.current.getScreenshot(); // jpeg
+    const imageSrc = webcamRef.current.getScreenshot(); // base64 jpeg
     if (imageSrc) {
-      sendImage(imageSrc);
+      await sendImage(imageSrc); // שולחים את התמונה כ-base64
     } else {
       alert("לא הצלחנו לצלם תמונה");
     }
   };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-    sendImage(file);
+    if (file) {
+      sendImage(file); // שולחים את הקובץ מהעלאה
+    }
   };
+
   const sendImage = async (imageData) => {
-  try {
-    let file;
-    if (typeof imageData === "string") {
-      // זה base64 מהמצלמה
-      const base64Data = imageData.split(',')[1];
-      const byteCharacters = atob(base64Data);
-      const byteNumbers = new Array(byteCharacters.length).fill().map((_, i) => byteCharacters.charCodeAt(i));
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'image/jpeg' });
-      file = new File([blob], "photo.jpg", { type: "image/jpeg" });
-    } else {
-      // זה קובץ מהעלאה
-      file = imageData;
+    try {
+      let file;
+
+      if (typeof imageData === "string") {
+        // אם זו תמונת מצלמה בפורמט base64
+        const base64Data = imageData.split(',')[1];
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = new Array(byteCharacters.length)
+          .fill()
+          .map((_, i) => byteCharacters.charCodeAt(i));
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/jpeg' });
+        file = new File([blob], "photo.jpg", { type: "image/jpeg" });
+      } else {
+        // אם זו תמונה מהעלאה
+        file = imageData;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("http://localhost:8001/validate", {
+        method: "POST",
+        body: formData,
+        mode: "cors"
+      });
+
+      const text = await response.text();
+
+      if (response.ok) {
+        const data = JSON.parse(text);
+        navigate("/result", { state: { result: data.result } });
+      } else {
+        alert("שגיאה מהשרת: " + text);
+      }
+    } catch (err) {
+      console.error("שגיאה בשליחת התמונה לשרת:", err);
+      alert("שגיאה בשליחת התמונה לשרת: " + err.message);
     }
-    const formData = new FormData();
-    formData.append("file", file);
-    const response = await fetch("http://localhost:8001/validate", {
-      method: "POST",
-      body: formData,
-    });
-    const text = await response.text();
-    if (response.ok) {
-      const data = JSON.parse(text);
-      navigate("/result", { state: { result: data.result } });
-    } else {
-      alert("שגיאה מהשרת: " + text);
-    }
-  } catch (err) {
-    console.error("שגיאה בשליחת התמונה לשרת:", err);
-    alert("שגיאה בשליחת התמונה לשרת: " + err.message);
-  }
-};
+  };
+
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       {!mode && (
         <>
           <h2>בחרי אפשרות</h2>
-          <button className="b" conClick={() => setMode("camera")}>צילום מצלמה</button>
+          <button className="b" onClick={() => setMode("camera")}>צילום מצלמה</button>
           <button className="b" onClick={() => setMode("upload")}>העלאת תמונה</button>
         </>
       )}
+
       {mode === "camera" && (
         <div>
           <Webcam
@@ -74,6 +87,7 @@ function CaptureOrUpload() {
           <button className="b" onClick={handleCapture}>צלמי ושלחי</button>
         </div>
       )}
+
       {mode === "upload" && (
         <div>
           <input type="file" accept="image/*" onChange={handleFileChange} />
@@ -82,4 +96,5 @@ function CaptureOrUpload() {
     </div>
   );
 }
+
 export default CaptureOrUpload;

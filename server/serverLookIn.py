@@ -10,12 +10,17 @@ from configuring_Mediapipe_module import draw_landmarks_on_image, detector
 from yolo_and_taking_picture import face_reconize
 from dictionary_definition import my_dict
 from fastapi.middleware.cors import CORSMiddleware
-from calculating_and_updating_averages import Calculating_and_updating_averages
+
+# from calculating_and_updating_averages import Calculating_and_updating_averages
+import json
+with open(r"C:\Users\This User\Desktop\Final project\server\points_data.json", encoding="utf-8") as f:
+    points_data = json.load(f)
 app = FastAPI()
-Calculating_and_updating_averages()
+#זימון של הפונקציה לעדכון הממוצעים אין ענין לעשות כל פעם מחדש כרגע
+# Calculating_and_updating_averages()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # כאן הממשק שלך
+    allow_origins=["http://localhost:3001"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -48,12 +53,13 @@ async def validate(file: UploadFile = File(...)):
             for j in personality_data[str(i)]["values1"]:
                 v1 +=arrMatchingTraits[j-1]
             for j in personality_data[str(i)]["values2"]:
-                v1 +=1 - arrMatchingTraits[j-1]
+                v1 +=points_data["f"+str(j)]['averages'][1]-arrMatchingTraits[j-1]
             v1 /= personality_data[str(i)]["count"]
             for j in personality_data[str(i+1)]["values1"]:
                 v2 += arrMatchingTraits[j-1]
             for j in personality_data[str(i+1)]["values2"]:
-                v2 +=1 - arrMatchingTraits[j-1]
+                print(points_data["f"+str(j)])
+                v2 +=points_data["f"+str(j)]['averages'][1]-arrMatchingTraits[j-1]
             v2 /= personality_data[str(i+1)]["count"]
             a |= int(personality_data[str(i)]["name"], 2) if v1 > v2 else int(personality_data[str(i+1)]["name"], 2)
             print(f"i: {i}, v1: {v1}, v2: {v2}, a: {a}")
@@ -61,6 +67,7 @@ async def validate(file: UploadFile = File(...)):
             count += 1
         return {"result": my_dict[a]}
     else:
+        print("לא זוהו פנים")
         return JSONResponse(
             content={"valid": False, "message": "No valid face detected in the image"},
             status_code=400
