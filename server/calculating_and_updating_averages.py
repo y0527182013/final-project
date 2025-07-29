@@ -14,7 +14,6 @@ def numeric_sort_key(name):
     # מוציא את כל המספרים במחרוזת, הופך אותם למספרים
     numbers = re.findall(r'\d+', name)
     return [int(num) for num in numbers]
-
 def Calculating_and_updating_averages():
     #פתיחת קובץ הפונקציות לקריאה
     with open("facial_features_functions_to_avg.py", "r", encoding="utf-8") as f:
