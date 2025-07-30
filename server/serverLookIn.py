@@ -22,7 +22,12 @@ with open(r"points_data.json", encoding="utf-8") as f:
     points_data = json.load(f)
 app = FastAPI()
 #זימון של הפונקציה לעדכון הממוצעים
-Calculating_and_updating_averages()
+# Calculating_and_updating_averages()
+#  קריאה לממוצעים – לא אוטומטית!
+@app.get("/update-averages")
+def run_update():
+    Calculating_and_updating_averages()
+    return {"status": "averages updated"}
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000",
