@@ -1,9 +1,9 @@
-import tkinter as tk
+# import tkinter as tk
 import cv2
 import datetime
 import mediapipe as mp
 import numpy as np
-from tkinter import filedialog
+# from tkinter import filedialog
 import sys
 from ultralytics import YOLO
 import os
