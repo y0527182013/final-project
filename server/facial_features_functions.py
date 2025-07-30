@@ -2,7 +2,7 @@ from GABA import analyze_eyebrow_shape
 import json
 import cv2
 import mediapipe as mp
-with open(r"C:\Users\This User\Desktop\Final project\server\points_data.json", encoding="utf-8") as f:
+with open("points_data.json", encoding="utf-8") as f:
     points_data = json.load(f)
 from com import compute_trait
 def f1(detection_result,image_path):

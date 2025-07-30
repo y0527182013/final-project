@@ -1,6 +1,6 @@
 import json
 from GABA import analyze_eyebrow_shape
-with open(r"C:\Users\This User\Desktop\Final project\server\points_data.json", encoding="utf-8") as f:
+with open("points_data.json", encoding="utf-8") as f:
     points_data = json.load(f)
 def f1(detection_result,image_path):
     return (detection_result.face_landmarks[0][points_data['f1']['points'][0]].x

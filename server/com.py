@@ -1,5 +1,5 @@
 import json
-with open(r"C:\Users\This User\Desktop\Final project\server\points_data.json", encoding="utf-8") as f:
+with open("points_data.json", encoding="utf-8") as f:
     points_data = json.load(f)
 
 def compute_trait(value,trait_key):

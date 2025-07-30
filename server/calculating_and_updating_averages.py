@@ -8,7 +8,7 @@ from configuring_Mediapipe_module import detector
 import ast
 import facial_features_functions_to_avg
 import re
-with open(r"C:\Users\This User\Desktop\Final project\server\points_data.json", "r", encoding="utf-8") as f:
+with open("points_data.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 def numeric_sort_key(name):
     # מוציא את כל המספרים במחרוזת, הופך אותם למספרים
@@ -21,7 +21,7 @@ def Calculating_and_updating_averages():
     ordered_function_names = [node.name for node in tree.body if isinstance(node, ast.FunctionDef)]
     # סינון הפונקציות לפי שמות לתוך המערך
     functions = [getattr(facial_features_functions_to_avg, name) for name in ordered_function_names if hasattr(facial_features_functions_to_avg, name)]
-    mainFolder = r"C:\Users\This User\Desktop\Final project\server\photos to project"
+    mainFolder ="photos to project"
     all_dirs = [d for d in os.listdir(mainFolder) if os.path.isdir(os.path.join(mainFolder, d))]
     all_dirs.sort(key=numeric_sort_key)
     #יצירת מטריצה עם שמות כל התיקיות
@@ -29,7 +29,7 @@ def Calculating_and_updating_averages():
     for i in range(0,22):
       for j in range(0,2):
       # נתיב לתיקייה הנוכחית
-        input_folder = rf"C:\Users\This User\Desktop\Final project\server\photos to project\{matFase[i][j]}"
+        input_folder = os.path.join("photos to project", matFase[i][j])
         # מעבר על כל התמונות בתיקייה
         valus=[]
         for filename in os.listdir(input_folder):

@@ -18,7 +18,7 @@ with open(r"facial_features_functions.py", "r", encoding="utf-8") as f:
     tree = ast.parse(f.read()) 
 with open(r"personality_data.json", encoding="utf-8") as f:
         personality_data = json.load(f)
-with open(r"C:\Users\This User\Desktop\Final project\server\points_data.json", encoding="utf-8") as f:
+with open(r"points_data.json", encoding="utf-8") as f:
     points_data = json.load(f)
 app = FastAPI()
 #זימון של הפונקציה לעדכון הממוצעים
