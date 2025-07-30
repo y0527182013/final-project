@@ -148,3 +148,17 @@
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+.spinner {
+  margin-top: 30px;
+  font-size: 20px;
+  color: #00bcd4;
+  text-align: center;
+  animation: pulseSpinner 1.5s infinite ease-in-out;
+  font-weight: 600;
+}
+
+@keyframes pulseSpinner {
+  0% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.4; transform: scale(1); }
+}
