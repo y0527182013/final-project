@@ -52,7 +52,7 @@ function CaptureOrUpload() {
       formData.append("file", file);
 
       //localhost:8001-כתובת מקומית של השרת שלי
-      const response = await fetch("http://https://lookin-58h4.onrender.com//validate", {
+      const response = await fetch("http://lookin-58h4.onrender.com//validate", {
         method: "POST",
         body: formData,
         mode: "cors"
