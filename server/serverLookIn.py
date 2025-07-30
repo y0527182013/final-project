@@ -35,6 +35,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# ✅ קריאה לממוצעים – לא אוטומטית!
+@app.get("/update-averages")
+def run_update():
+    Calculating_and_updating_averages()
+    return {"status": "averages updated"}
 @app.post("/validate")
 async def validate(file: UploadFile = File(...)):
     arrMatchingTraits=[]
