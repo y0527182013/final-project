@@ -129,10 +129,11 @@ function CaptureOrUpload() {
   const [mode, setMode] = useState(null);
   const [previewSrc, setPreviewSrc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showOnlySpinner, setShowOnlySpinner] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const webcamRef = useRef(null);
   const navigate = useNavigate();
 
-  // 🔔 מעיר את השרת ברגע שהמסך נטען
   useEffect(() => {
     fetch("https://lookin-58h4.onrender.com/validate", {
       method: "GET",
@@ -146,6 +147,7 @@ function CaptureOrUpload() {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc) {
       setPreviewSrc(imageSrc);
+      setShowPreview(true);
       await sendImage(imageSrc);
     } else {
       alert("לא הצלחנו לצלם תמונה");
@@ -155,18 +157,21 @@ function CaptureOrUpload() {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setPreviewSrc(URL.createObjectURL(file));
+      const url = URL.createObjectURL(file);
+      setPreviewSrc(url);
+      setShowPreview(true);
       await sendImage(file);
     }
   };
 
   const sendImage = async (imageData) => {
     setIsLoading(true);
+    setShowOnlySpinner(false); // בשלב ראשון נראה תצוגה מקדימה
+
     try {
       let file;
 
       if (typeof imageData === "string") {
-        // base64 → File
         const base64Data = imageData.split(',')[1];
         const byteCharacters = atob(base64Data);
         const byteNumbers = new Array(byteCharacters.length)
@@ -179,7 +184,6 @@ function CaptureOrUpload() {
         file = imageData;
       }
 
-      // 📦 דחיסת תמונה לפני שליחה
       const compressedFile = await imageCompression(file, {
         maxSizeMB: 0.3,
         maxWidthOrHeight: 800,
@@ -188,6 +192,12 @@ function CaptureOrUpload() {
 
       const formData = new FormData();
       formData.append("file", compressedFile);
+
+      // מעבר לאנימציה בלבד אחרי 3 שניות
+      setTimeout(() => {
+        setShowPreview(false);
+        setShowOnlySpinner(true);
+      }, 3000);
 
       const response = await fetch("https://lookin-58h4.onrender.com/validate", {
         method: "POST",
@@ -215,13 +225,13 @@ function CaptureOrUpload() {
       <div className="upload-card">
         {!mode && (
           <>
-            <h2>בחרי אפשרות</h2>
-            <button className="b" onClick={() => setMode("camera")}>צילום מצלמה</button>
+            {/* <h2>בחרי אפשרות</h2> */}
+            <button className="b" onClick={() => setMode("camera")}>צילום תמונה</button>
             <button className="b" onClick={() => setMode("upload")}>העלאת תמונה</button>
           </>
         )}
 
-        {mode === "camera" && (
+        {mode === "camera" && !isLoading && (
           <div className="upload-camera">
             <Webcam
               ref={webcamRef}
@@ -232,29 +242,29 @@ function CaptureOrUpload() {
             />
             <br />
             <button className="b" onClick={handleCapture} disabled={isLoading}>
-              {isLoading ? "שולח..." : "צלמי ושלחי"}
+              צילום ושליחה
             </button>
           </div>
         )}
 
-        {mode === "upload" && (
+        {mode === "upload" && !isLoading && (
           <div className="upload-upload">
             <label className="custom-file-upload">
               <input type="file" accept="image/jpeg,image/png" onChange={handleFileChange} disabled={isLoading} />
-              בחרי תמונה
+              בחירת תמונה
             </label>
           </div>
         )}
 
-        {isLoading && (
-          <div className="spinner">⏳ שולח תמונה... אנא המתיני</div>
-        )}
-
-        {previewSrc && (
+        {showPreview && previewSrc && (
           <div className="preview-image">
-            <h4>תצוגה מקדימה:</h4>
+            <h4>תצוגה מקדימה</h4>
             <img src={previewSrc} alt="preview" />
           </div>
+        )}
+
+        {isLoading && showOnlySpinner && (
+          <div className="spinner spinning-circle"></div>
         )}
       </div>
     </div>

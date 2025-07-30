@@ -148,7 +148,7 @@
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
-.spinner {
+/* .spinner {
   margin-top: 30px;
   font-size: 20px;
   color: #00bcd4;
@@ -161,4 +161,17 @@
   0% { opacity: 0.4; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.1); }
   100% { opacity: 0.4; transform: scale(1); }
+} */
+.spinner.spinning-circle {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #ccc;
+  border-top: 6px solid #2196f3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 40px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
