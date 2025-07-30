@@ -8,7 +8,7 @@ import sys
 from ultralytics import YOLO
 import os
 import time
-model_path = r"C:\Users\This User\Desktop\Final project\server\models\best.pt"
+model_path = os.path.join(os.path.dirname(__file__), 'models', 'best.pt')
 yolo_model = YOLO(model_path)
 # פונקציה לבדוק אם YOLO זיהה פנים מתאימות
 def yolo_detect_valid_face(image):
