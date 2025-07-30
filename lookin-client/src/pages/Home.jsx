@@ -31,7 +31,7 @@ function Home() {
       <div className="home-card">
         <img src="/logo.png" alt="לוגו" className="home-logo" />
         <button className="home-button" onClick={handleClick}>
-          התחל אבחון
+          כניסה לאבחון
         </button>
       </div>
     </div>
