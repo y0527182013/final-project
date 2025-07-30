@@ -3,4 +3,5 @@ uvicorn[standard]
 opencv-python
 numpy
 mediapipe
+ultralytics
 
